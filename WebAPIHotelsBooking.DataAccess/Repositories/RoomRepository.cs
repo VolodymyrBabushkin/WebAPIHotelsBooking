@@ -2,9 +2,9 @@
 using System.Linq;
 using WebAPIHotelsBooking.DataAccess.Entities;
 
-namespace WebAPIHotelsBooking.DataAccess.Repositories.Room
+namespace WebAPIHotelsBooking.DataAccess.Repositories
 {
-    internal class RoomRepository : IRoomRepository
+    public class RoomRepository : IRepository<RoomEntity>
     {
         private readonly HotelsBookingContext _context;
 

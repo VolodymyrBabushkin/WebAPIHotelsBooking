@@ -1,8 +1,7 @@
 ﻿namespace WebAPIHotelsBooking.DataAccess.Entities
 {
-    public class HotelEntity
+    public class HotelEntity : BaseEntity
     {
-        public string Id { get; init; }
         public string Name { get; set; }
         public float Rating { get; set; }
         public string Country { get; set; }

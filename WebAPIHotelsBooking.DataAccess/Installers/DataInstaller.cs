@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using WebAPIHotelsBooking.DataAccess.Repositories.Client;
-using WebAPIHotelsBooking.DataAccess.Repositories.Hotel;
-using WebAPIHotelsBooking.DataAccess.Repositories.Reservation;
-using WebAPIHotelsBooking.DataAccess.Repositories.Room;
+using WebAPIHotelsBooking.DataAccess.Entities;
+using WebAPIHotelsBooking.DataAccess.Repositories;
 
 namespace WebAPIHotelsBooking.DataAccess.Installers
 {
@@ -12,10 +10,10 @@ namespace WebAPIHotelsBooking.DataAccess.Installers
         {
             services
                 .AddSingleton<HotelsBookingContext>()
-                .AddTransient<IClientRepository, ClientRepository>()
-                .AddTransient<IHotelRepository, HotelRepository>()
-                .AddTransient<IReservationRepository, ReservationRepository>()
-                .AddTransient<IRoomRepository, RoomRepository>();
+                .AddTransient<IRepository<ClientEntity>, ClientRepository>()
+                .AddTransient<IRepository<HotelEntity>, HotelRepository>()
+                .AddTransient<IRepository<ReservationEntity>, ReservationRepository>()
+                .AddTransient<IRepository<RoomEntity>, RoomRepository>();
 
             return services;
         }

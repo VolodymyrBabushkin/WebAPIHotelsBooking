@@ -1,17 +1,20 @@
 ﻿using WebAPIHotelsBooking.BusinessLogic.Contracts;
 using WebAPIHotelsBooking.BusinessLogic.Dtos;
+using WebAPIHotelsBooking.DataAccess;
 using WebAPIHotelsBooking.DataAccess.Entities;
-using WebAPIHotelsBooking.DataAccess.Repositories.Client;
+using WebAPIHotelsBooking.DataAccess.Repositories;
+using WebAPIHotelsBooking.DataAccess.Repositories.Factory;
 
 namespace WebAPIHotelsBooking.BusinessLogic.Services
 {
     public  class ClientService : IClientService
     {
-        private readonly IClientRepository _clientRepository;
+        private readonly IRepository<ClientEntity> _clientRepository;
 
-        public ClientService(IClientRepository clientRepository)
+        public ClientService(HotelsBookingContext context)
         {
-            _clientRepository = clientRepository;
+            IRepositoryFactory factory = RepositoryFactory.Instance();
+            _clientRepository = (ClientRepository)factory.Instantiate<ClientEntity>(context);
         }
 
         public async Task Create(ClientDto client)

@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using WebAPIHotelsBooking.DataAccess.Entities;
 
-namespace WebAPIHotelsBooking.DataAccess.Repositories.Reservation
+namespace WebAPIHotelsBooking.DataAccess.Repositories
 {
-    public class ReservationRepository : IReservationRepository
+    public class ReservationRepository : IRepository<ReservationEntity>
     {
         private readonly HotelsBookingContext _context;
 
