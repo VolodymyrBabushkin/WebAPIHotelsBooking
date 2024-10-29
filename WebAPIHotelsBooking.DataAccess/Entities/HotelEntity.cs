@@ -7,5 +7,16 @@
         public string Country { get; set; }
         public string City { get; set; }
         public string Address { get; set; }
+
+        public override object Clone()
+        {
+            HotelEntity clone = (HotelEntity)base.Clone();
+            clone.Name = Name;
+            clone.Rating = Rating;
+            clone.Country = Country;
+            clone.City = City;
+            clone.Address = Address;
+            return clone;
+        }
     }
 }
