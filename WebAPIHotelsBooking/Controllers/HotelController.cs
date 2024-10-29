@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebAPIHotelsBooking.BusinessLogic.Builder;
 using WebAPIHotelsBooking.BusinessLogic.Contracts;
 using WebAPIHotelsBooking.BusinessLogic.Dtos;
 using WebAPIHotelsBooking.Models.Hotels;
@@ -11,11 +12,13 @@ namespace WebAPIHotelsBooking.Controllers
     {
         private readonly ILogger<HotelController> _logger;
         private readonly IHotelService _hotelService;
+        private readonly IHotelBuilder _hotelBuilder;
 
-        public HotelController(ILogger<HotelController> logger, IHotelService hotelService)
+        public HotelController(ILogger<HotelController> logger, IHotelService hotelService, IHotelBuilder hotelBuilder)
         {
             _logger = logger;
             _hotelService = hotelService;
+            _hotelBuilder = hotelBuilder;
         }
 
         [HttpGet("get", Name = "GetHotels")]
@@ -81,13 +84,13 @@ namespace WebAPIHotelsBooking.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] CreateHotelRequest request)
         {
-            var entity = new HotelDto(
-                id: Guid.NewGuid().ToString(),
-                name: request.Name,
-                rating: request.Rating,
-                country: request.Country,
-                city: request.City,
-                address: request.Address);
+            var entity = _hotelBuilder
+                .SetName(request.Name)
+                .SetRating(request.Rating)
+                .SetCountry(request.Country)
+                .SetCity(request.City)
+                .SetAddress(request.Address)
+                .Build();
             try
             {
                 await _hotelService.Create(entity);
@@ -104,13 +107,14 @@ namespace WebAPIHotelsBooking.Controllers
         [HttpPut]
         public async Task<ActionResult> Update([FromBody] UpdateHotelRequest request)
         {
-            var entity = new HotelDto(
-                id: request.Id,
-                name: request.Name,
-                rating: request.Rating,
-                country: request.Country,
-                city: request.City,
-                address: request.Address);
+            var entity = _hotelBuilder
+                .SetId(request.Id)
+                .SetName(request.Name)
+                .SetRating(request.Rating)
+                .SetCountry(request.Country)
+                .SetCity(request.City)
+                .SetAddress(request.Address)
+                .Build();
             try
             {
                 await _hotelService.Update(entity);
