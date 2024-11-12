@@ -9,7 +9,8 @@ builder.Services
     .AddClients()
     .AddHotels()
     .AddRooms()
-    .AddReservations();
+    .AddReservations()
+    .AddMemoryCache();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

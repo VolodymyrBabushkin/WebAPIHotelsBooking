@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPIHotelsBooking.BusinessLogic.Contracts;
+using WebAPIHotelsBooking.BusinessLogic.Decorator;
 using WebAPIHotelsBooking.BusinessLogic.Dtos;
 using WebAPIHotelsBooking.Models.Reservations;
 
@@ -98,6 +99,24 @@ namespace WebAPIHotelsBooking.Controllers
                 _logger.LogError(ex, $"Failed to create reservation with id={entity.Id}");
                 return BadRequest();
             }
+        }
+
+        [HttpPost("decoratorTest", Name = "DecoratorTestCreateReservation")]
+        public async Task<ActionResult> CreateWithDecorator([FromBody] CreateReservationRequest request)
+        {
+            IReservation reservation = new Reservation();
+            IReservation loggingReservation = new LoggingReservationDecorator(reservation, _logger);
+            IReservation reservationWithLoggingAndLimit = new LimitCheckingReservationDecorator(loggingReservation, 5, _logger);
+
+            var entity = new ReservationDto(
+                id: Guid.NewGuid().ToString(),
+                clientId: request.ClientId,
+                roomId: request.RoomId,
+                begin: request.Begin,
+                end: request.End);
+
+            reservationWithLoggingAndLimit.Create(entity, _reservationService);
+            return Ok();
         }
 
         [HttpPut]
