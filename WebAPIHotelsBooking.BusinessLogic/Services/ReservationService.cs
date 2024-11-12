@@ -1,5 +1,6 @@
 ﻿using WebAPIHotelsBooking.BusinessLogic.Contracts;
 using WebAPIHotelsBooking.BusinessLogic.Dtos;
+using WebAPIHotelsBooking.BusinessLogic.Iterator;
 using WebAPIHotelsBooking.DataAccess;
 using WebAPIHotelsBooking.DataAccess.Entities;
 using WebAPIHotelsBooking.DataAccess.Repositories;
@@ -109,6 +110,26 @@ namespace WebAPIHotelsBooking.BusinessLogic.Services
                 Begin = reservation.Begin,
                 End = reservation.End,
             });
+        }
+
+        public async Task<IReadOnlyList<ReservationDto>> Iterator()
+        {
+            var reservations = await _reservationRepository.Get();
+            if (reservations == null)
+                return new List<ReservationDto>();
+
+            ReservationCollection reservationDtos = new ReservationCollection();
+            foreach (var reservation in reservations)
+            {
+                var dto = new ReservationDto(
+                    id: reservation.Id,
+                    clientId: reservation.ClientId,
+                    roomId: reservation.RoomId,
+                    begin: reservation.Begin,
+                    end: reservation.End);
+                reservationDtos.Add(dto);
+            }
+            return reservationDtos.ToList();
         }
     }
 }

@@ -34,6 +34,21 @@ namespace WebAPIHotelsBooking.Controllers
             }
         }
 
+        [HttpGet("getIterator", Name = "GetReservationsByIterator")]
+        public async Task<ActionResult<IEnumerable<ReservationDto>>> GetReservationsByIterator()
+        {
+            try
+            {
+                var result = await _reservationService.Iterator();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Failed to fetch reservations");
+                return BadRequest();
+            }
+        }
+
         [HttpGet("getById/{id}", Name = "GetReservationById")]
         public async Task<ActionResult<ReservationDto>> GetReservationById([FromRoute] string id)
         {
