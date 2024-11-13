@@ -8,7 +8,7 @@ namespace WebAPIHotelsBooking.BusinessLogic.Installers
     {
         public static IServiceCollection AddRooms(this IServiceCollection services)
         {
-            services.AddScoped<IRoomService, RoomService>();
+            services.AddSingleton<IRoomService, RoomService>();
             return services;
         }
     }

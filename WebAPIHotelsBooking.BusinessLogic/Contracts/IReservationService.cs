@@ -5,6 +5,7 @@ namespace WebAPIHotelsBooking.BusinessLogic.Contracts
     public interface IReservationService
     {
         public Task<IReadOnlyList<ReservationDto>> Get();
+        public Task<IReadOnlyList<ReservationDto>> Iterator();
         public Task<ReservationDto> Get(string id);
         public Task<IReadOnlyList<ReservationDto>> GetByClientId(string clientId);
         public Task<IReadOnlyList<ReservationDto>> GetByRoomId(string roomId);

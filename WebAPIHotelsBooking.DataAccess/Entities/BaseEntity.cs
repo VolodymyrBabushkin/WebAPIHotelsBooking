@@ -2,7 +2,7 @@
 {
     public class BaseEntity : ICloneable
     {
-        public string Id { get; init; }
+        public string Id { get; set; }
 
         public virtual object Clone()
         {

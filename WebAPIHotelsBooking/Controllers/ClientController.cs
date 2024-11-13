@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPIHotelsBooking.BusinessLogic.Contracts;
+using WebAPIHotelsBooking.BusinessLogic.Decorator;
 using WebAPIHotelsBooking.BusinessLogic.Dtos;
+using WebAPIHotelsBooking.BusinessLogic.Memento;
+using WebAPIHotelsBooking.BusinessLogic.Services;
+using WebAPIHotelsBooking.DataAccess.Entities;
 using WebAPIHotelsBooking.Models.Clients;
+using WebAPIHotelsBooking.Models.Reservations;
 
 namespace WebAPIHotelsBooking.Controllers
 {
@@ -45,6 +50,47 @@ namespace WebAPIHotelsBooking.Controllers
             {
                 _logger.LogError(e, $"Failed to fetch client by id");
                 return BadRequest();
+            }
+        }
+
+        [HttpPost("mementoTest", Name = "MementoTest")]
+        public void MementoTest()
+        {
+            ClientsList clients = new ClientsList();
+            clients.Add(new ClientDto("1", "Axel", "Van de Velde"));
+            clients.Add(new ClientDto("2", "Gordan", "Laydel"));
+            ClientsListCaretaker caretaker = new ClientsListCaretaker(clients);
+
+            Console.WriteLine("Before changes:");
+            foreach (var client in clients.GetClients())
+            {
+                Console.WriteLine($"    {client.Id}: {client.FirstName} {client.LastName}");
+            }
+
+            caretaker.Backup();
+            clients.Add(new ClientDto("3", "Axel", "Laydel"));
+
+            caretaker.Backup();
+            clients.RemoveAt(1);
+
+            Console.WriteLine("After changes:");
+            foreach (var client in clients.GetClients())
+            {
+                Console.WriteLine($"    {client.Id}: {client.FirstName} {client.LastName}");
+            }
+
+            caretaker.Undo();
+            Console.WriteLine("First undo:");
+            foreach (var client in clients.GetClients())
+            {
+                Console.WriteLine($"    {client.Id}: {client.FirstName} {client.LastName}");
+            }
+
+            caretaker.Undo();
+            Console.WriteLine("Second undo:");
+            foreach (var client in clients.GetClients())
+            {
+                Console.WriteLine($"    {client.Id}: {client.FirstName} {client.LastName}");
             }
         }
 

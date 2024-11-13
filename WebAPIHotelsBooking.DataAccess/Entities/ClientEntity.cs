@@ -7,7 +7,8 @@
 
         public override object Clone()
         {
-            ClientEntity clone = (ClientEntity)base.Clone();
+            ClientEntity clone = new ClientEntity();
+            clone.Id = Id;
             clone.FirstName = FirstName;
             clone.LastName = LastName;
             return clone;

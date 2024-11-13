@@ -78,6 +78,21 @@ namespace WebAPIHotelsBooking.Controllers
             }
         }
 
+        [HttpGet("undo", Name = "Undo")]
+        public async Task<ActionResult<RoomDto>> Undo()
+        {
+            try
+            {
+                await _roomService.Undo();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Failed to undo last command");
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] CreateRoomRequest request)
         {

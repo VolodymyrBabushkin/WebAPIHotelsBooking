@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PSVHotelsService;
+using WebAPIHotelsBooking.BusinessLogic.Adapters;
 using WebAPIHotelsBooking.BusinessLogic.Builder;
 using WebAPIHotelsBooking.BusinessLogic.Contracts;
 using WebAPIHotelsBooking.BusinessLogic.Dtos;
@@ -79,6 +81,34 @@ namespace WebAPIHotelsBooking.Controllers
                 _logger.LogError(e, $"Failed to fetch hotel by city");
                 return BadRequest();
             }
+        }
+
+        [HttpGet("getPSVHotels", Name = "GetPSVHotels")]
+        public async Task<ActionResult> GetPSVHotels()
+        {
+            PSVHotelsAdapter hotels = new PSVHotelsAdapter(new PSVHotels());
+            foreach (var hotel in hotels.Get())
+            {
+                var entity = _hotelBuilder
+                    .SetId(hotel.Id)
+                    .SetName(hotel.Name)
+                    .SetRating(hotel.Rating)
+                    .SetCountry(hotel.Country)
+                    .SetCity(hotel.City)
+                    .SetAddress(hotel.Address)
+                    .Build();
+                try
+                {
+                    await _hotelService.Create(entity);
+                    _logger.LogInformation($"Hotel with id={entity.Id} succesfully loaded from PSV");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Failed to load hotel with id={entity.Id} from PSV");
+                    return BadRequest();
+                }
+            }
+            return Ok();
         }
 
         [HttpPost]
