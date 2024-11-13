@@ -1,4 +1,5 @@
-﻿using WebAPIHotelsBooking.BusinessLogic.Contracts;
+﻿using WebAPIHotelsBooking.BusinessLogic.Command;
+using WebAPIHotelsBooking.BusinessLogic.Contracts;
 using WebAPIHotelsBooking.BusinessLogic.Dtos;
 using WebAPIHotelsBooking.DataAccess;
 using WebAPIHotelsBooking.DataAccess.Entities;
@@ -10,6 +11,7 @@ namespace WebAPIHotelsBooking.BusinessLogic.Services
     public class RoomService : IRoomService
     {
         private readonly IRepository<RoomEntity> _roomRepository;
+        private List<ICommand> _commands = new List<ICommand>();
 
         public RoomService(HotelsBookingContext context)
         {
@@ -22,14 +24,17 @@ namespace WebAPIHotelsBooking.BusinessLogic.Services
             if (room == RoomDto.Default)
                 return;
 
-            await _roomRepository.Create(new RoomEntity
+            var entity = new RoomEntity
             {
                 Id = room.Id,
                 HotelId = room.HotelId,
                 RoomNumber = room.RoomNumber,
                 BedsCount = room.BedsCount,
                 FreeWiFi = room.FreeWiFi,
-            });
+            };
+            var command = new CommandCreate<RoomEntity>(_roomRepository, entity);
+            _commands.Add(command);
+            await command.Execute();
         }
 
         public async Task<IReadOnlyList<RoomDto>> Get()
@@ -93,7 +98,9 @@ namespace WebAPIHotelsBooking.BusinessLogic.Services
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException();
 
-            await _roomRepository.Delete(id);
+            var command = new CommandDelete<RoomEntity>(_roomRepository, id);
+            _commands.Add(command);
+            await command.Execute();
         }
 
         public async Task Update(RoomDto room)
@@ -101,14 +108,23 @@ namespace WebAPIHotelsBooking.BusinessLogic.Services
             if (room == RoomDto.Default)
                 return;
 
-            await _roomRepository.Update(new RoomEntity
+            var entity = new RoomEntity
             {
                 Id = room.Id,
                 HotelId = room.HotelId,
                 RoomNumber = room.RoomNumber,
                 BedsCount = room.BedsCount,
                 FreeWiFi = room.FreeWiFi,
-            });
+            };
+            var command = new CommandUpdate<RoomEntity>(_roomRepository, entity);
+            _commands.Add(command);
+            await command.Execute();
+        }
+
+        public async Task Undo()
+        {
+            await _commands.Last().Undo();
+            _commands.RemoveAt(_commands.Count - 1);
         }
     }
 }

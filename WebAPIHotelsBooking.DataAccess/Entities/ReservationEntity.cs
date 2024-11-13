@@ -9,7 +9,8 @@
 
         public override object Clone()
         {
-            ReservationEntity clone = (ReservationEntity)base.Clone();
+            ReservationEntity clone = new ReservationEntity();
+            clone.Id = Id;
             clone.ClientId = ClientId;
             clone.RoomId = RoomId;
             clone.Begin = Begin;

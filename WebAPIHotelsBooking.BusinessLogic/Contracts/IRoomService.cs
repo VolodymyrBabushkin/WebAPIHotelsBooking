@@ -1,4 +1,5 @@
-﻿using WebAPIHotelsBooking.BusinessLogic.Dtos;
+﻿using WebAPIHotelsBooking.BusinessLogic.Command;
+using WebAPIHotelsBooking.BusinessLogic.Dtos;
 
 namespace WebAPIHotelsBooking.BusinessLogic.Contracts
 {
@@ -11,5 +12,6 @@ namespace WebAPIHotelsBooking.BusinessLogic.Contracts
         Task Create(RoomDto room);
         Task Update(RoomDto room);
         Task Remove(string id);
+        Task Undo();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using WebAPIHotelsBooking.DataAccess.Entities;
 
 namespace WebAPIHotelsBooking.DataAccess.Repositories
